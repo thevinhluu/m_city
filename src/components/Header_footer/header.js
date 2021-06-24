@@ -1,23 +1,9 @@
 import { AppBar, Button, Toolbar } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { firebase } from '../../firebase';
-import { CityLogo } from '../Utils/tools';
-import { showErrorToast, showSuccessToast } from '../Utils/tools';
+import { CityLogo, logoutHandler } from '../Utils/tools';
 
 const Header = ({ user }) => {
-	const logoutHandler = () => {
-		firebase
-			.auth()
-			.signOut()
-			.then(() => {
-				showSuccessToast('Good bye!!');
-			})
-			.catch((error) => {
-				showErrorToast(error.message);
-			});
-	};
-
 	return (
 		<AppBar
 			position='fixed'
