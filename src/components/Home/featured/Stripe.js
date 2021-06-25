@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { easePolyOut } from 'd3-ease';
+import React from 'react';
 import { Animate } from 'react-move';
 
 let stripesState = [
