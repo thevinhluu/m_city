@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import AdminLayout from '../../../Hoc/AdminLayout';
+import { Button, FormControl, MenuItem, Select, TextField } from '@material-ui/core';
 import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
-import { showErrorToast, showSuccessToast, textErrorHelper, selectErrorHelper, selectIsError } from '../../Utils/tools';
-import { TextField, Select, MenuItem, FormControl, Button } from '@material-ui/core';
-import { playersCollection, firebase } from '../../../firebase';
+import { firebase, playersCollection } from '../../../firebase';
+import AdminLayout from '../../../Hoc/AdminLayout';
+import Fileuploader from '../../Utils/fileUploader';
+import { selectErrorHelper, selectIsError, showErrorToast, showSuccessToast, textErrorHelper } from '../../Utils/tools';
 
 const defaultValues = {
 	name     : '',
 	lastname : '',
 	number   : '',
-	position : ''
+	position : '',
+	image    : ''
 };
 
 const AddEditPlayers = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [formType, setFormType] = useState('');
 	const [values, setValues] = useState(defaultValues);
+	const [defaultImg, setDefaultImg] = useState('');
 
 	const formik = useFormik({
 		enableReinitialize : true,
@@ -28,7 +31,8 @@ const AddEditPlayers = (props) => {
 				.required('This input is required')
 				.min(0, 'The minimum is cero')
 				.max(100, 'The max is 100'),
-			position : Yup.string().required('This input is required')
+			position : Yup.string().required('This input is required'),
+			image    : Yup.string().required('This input is required')
 		}),
 		onSubmit           : (values) => {
 			submitForm(values);
@@ -76,6 +80,12 @@ const AddEditPlayers = (props) => {
 					.get()
 					.then((snapshot) => {
 						if (snapshot.data()) {
+							////
+							firebase.storage().ref('players').child(snapshot.data().image).getDownloadURL().then((url) => {
+								updateImageName(snapshot.data().image);
+								setDefaultImg(url);
+							});
+
 							setFormType('edit');
 							setValues(snapshot.data());
 						}
@@ -95,12 +105,31 @@ const AddEditPlayers = (props) => {
 		[props.match.params.playerid]
 	);
 
+	const updateImageName = (filename) => {
+		formik.setFieldValue('image', filename);
+	};
+
+	const resetImage = () => {
+		formik.setFieldValue('image', '');
+		setDefaultImg('');
+	};
+
 	return (
 		<AdminLayout title={formType === 'add' ? 'Add player' : 'Edit player'}>
 			<div className='editplayers_dialog_wrapper'>
 				<div>
 					<form onSubmit={formik.handleSubmit}>
-						image
+						<FormControl error={selectIsError(formik, 'image')}>
+							<Fileuploader
+								dir='players'
+								defaultImg={defaultImg} /// image url
+								defaultImgName={formik.values.image} /// name of file
+								filename={(filename) => updateImageName(filename)}
+								resetImage={() => resetImage()}
+							/>
+							{selectErrorHelper(formik, 'image')}
+						</FormControl>
+
 						<hr />
 						<h4>Player info</h4>
 						<div className='mb-5'>
@@ -115,6 +144,7 @@ const AddEditPlayers = (props) => {
 								/>
 							</FormControl>
 						</div>
+
 						<div className='mb-5'>
 							<FormControl>
 								<TextField
@@ -127,6 +157,7 @@ const AddEditPlayers = (props) => {
 								/>
 							</FormControl>
 						</div>
+
 						<div className='mb-5'>
 							<FormControl>
 								<TextField
@@ -140,6 +171,7 @@ const AddEditPlayers = (props) => {
 								/>
 							</FormControl>
 						</div>
+
 						<div className='mb-5'>
 							<FormControl error={selectIsError(formik, 'position')}>
 								<Select
@@ -148,7 +180,6 @@ const AddEditPlayers = (props) => {
 									variant='outlined'
 									displayEmpty
 									{...formik.getFieldProps('position')}
-									{...textErrorHelper(formik, 'position')}
 								>
 									<MenuItem value='' disabled>
 										Select a position
@@ -161,6 +192,7 @@ const AddEditPlayers = (props) => {
 								{selectErrorHelper(formik, 'position')}
 							</FormControl>
 						</div>
+
 						<Button type='submit' variant='contained' color='primary' disabled={loading}>
 							{formType === 'add' ? 'Add player' : 'Edit player'}
 						</Button>
