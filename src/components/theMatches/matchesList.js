@@ -53,15 +53,15 @@ const MatchesList = (props) => {
 								</div>
 								<div className='block_wrapper nfo'>
 									<div>
-										<strong>Date:</strong>
+										<strong>Date: </strong>
 										{data.date}
 									</div>
 									<div>
-										<strong>Stadium:</strong>
+										<strong>Stadium: </strong>
 										{data.stadium}
 									</div>
 									<div>
-										<strong>Referee:</strong>
+										<strong>Referee: </strong>
 										{data.referee}
 									</div>
 								</div>

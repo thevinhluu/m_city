@@ -14,6 +14,7 @@ import SignIn from './components/Signin';
 import TheTeam from './components/theTeam';
 import AuthGuard from './Hoc/Auth';
 import TheMatches from './components/theMatches';
+import NotFound from './components/not_found';
 
 const Routes = ({ user }) => {
 	return (
@@ -33,6 +34,7 @@ const Routes = ({ user }) => {
 				<Route path='/the_team' component={TheTeam} />
 				<Route path='/sign_in' exact component={(props) => <SignIn {...props} user={user} />} />
 				<Route path='/' exact component={Home} />
+				<Route component={NotFound} />
 			</Switch>
 			<ToastContainer />
 			<Footer />
