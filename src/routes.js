@@ -13,6 +13,7 @@ import Home from './components/Home';
 import SignIn from './components/Signin';
 import TheTeam from './components/theTeam';
 import AuthGuard from './Hoc/Auth';
+import TheMatches from './components/theMatches';
 
 const Routes = ({ user }) => {
 	return (
@@ -28,6 +29,7 @@ const Routes = ({ user }) => {
 				<Route path='/admin_players' exact component={AuthGuard(AdminPlayers)} />
 
 				<Route path='/dashboard' component={AuthGuard(Dashboard)} />
+				<Route path='/the_matches' component={TheMatches} />
 				<Route path='/the_team' component={TheTeam} />
 				<Route path='/sign_in' exact component={(props) => <SignIn {...props} user={user} />} />
 				<Route path='/' exact component={Home} />
