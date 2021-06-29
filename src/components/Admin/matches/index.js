@@ -91,17 +91,17 @@ const AdminMatches = () => {
 									<TableCell>{match.date}</TableCell>
 									<TableCell>
 										<Link to={`/admin_matches/edit_match/${match.id}`}>
-											{match.local} <strong>-</strong> {match.away}
+											{match.away} <strong>-</strong> {match.local}
 										</Link>
 									</TableCell>
 									<TableCell>
-										{match.resultLocal} <strong>-</strong> {match.resultAway}
+										{match.resultAway} <strong>-</strong> {match.resultLocal}
 									</TableCell>
 									<TableCell>
 										{match.final === 'Yes' ? (
 											<span className='matches_tag_red'>Final</span>
 										) : (
-											<span className='matches_tag_green'>Not player yet</span>
+											<span className='matches_tag_green'>Not played yet</span>
 										)}
 									</TableCell>
 								</TableRow>
